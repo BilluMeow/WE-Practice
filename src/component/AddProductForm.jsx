@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import axios from "axios";
 
 function AddProductForm (props){
 
@@ -8,22 +9,32 @@ function AddProductForm (props){
     const [id, setid] = useState("");
 
     function getProductName(event){
-        setname(event.source.value)
+        setname(event.target.value)
     }
 
     function getProductSize(event){
-        setsize(event.source.value)
+        setsize(event.target.value)
     }
 
     function getProductId(event){
-        setid(event.source.value)
+        setid(event.target.value)
     }
 
-    function getProductPrice(event){
-        setprice(event.source.value)
+    const getProductPrice = (event) => {
+        setprice(event.target.value)
     }
+
+    const addNewProduct = (newproductdata) => {
+        axios.post("/api/add.php", JSON.stringify(newproductdata))
+        .then(response => {
+          //console.log(response.data.message)
+          props.fetchData("/api/view.php");
+        })
+      }
     
-    function sendData(){
+    function sendData(event){
+        event.preventDefault();
+
         let data = {};
 
         data.id = id;
@@ -31,12 +42,13 @@ function AddProductForm (props){
         data.size = size;
         data.price= price;
 
-        props.addProductHandler(data);
+        addNewProduct(data);
     }
 
     return (
         <div>
-            <form>
+            <form onSubmit={sendData}>
+                <h2>{props.message}</h2>
                 <label> ID : </label>
                 <input type="text" value={id} onChange={getProductId}/> <br />
 
@@ -49,7 +61,7 @@ function AddProductForm (props){
                 <label> Price : </label>
                 <input type="text" value={price} onChange={getProductPrice}/> <br />
 
-                <input type="submit" onClick={sendData}/>
+                <input type="submit" />
             </form>
         </div>
     )

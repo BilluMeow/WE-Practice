@@ -9,7 +9,7 @@ function App() {
   const [bili, setproducts] = useState([])
   const [addState, setaddState] = useState("");
 
-  function fetchData(apiURL) {
+  const fetchData = (apiURL) => {
     axios.get(apiURL)
     .then((response) => {
       setproducts(response.data);
@@ -20,27 +20,15 @@ function App() {
     fetchData("/api/view.php")
   }, []);
 
-  const addNewProduct = (newproductdata) => {
-    axios.post("/api/add.php", JSON.stringify(newproductdata))
-    .then(response => {
-      console.log(response)
-      if(response.message === "successful"){
-        fetchData();
-        setaddState("successful");
-      }
-      else{
-        setaddState("unsuccessful");
-      }
-    })
-  }
+  
 
   return (
     <div className="App">
-        <AddProduct onSendData={addNewProduct}/>
+        <AddProduct fetchData={fetchData} message={addState} messageEditor={setaddState} />
         {bili.map((data) => {
           return (
             <div>
-              <Product class="App-header" name={data.name} id={data.id} price={data.price} size={data.size} /> <br />
+              <Product name={data.name} id={data.id} price={data.price} size={data.size} /> <br />
             </div>
           )
         })}

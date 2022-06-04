@@ -5,7 +5,7 @@ function AddProduct(props) {
 
     return (
         <div>
-            <AddProductFrom addProductHandler={props.addNewProduct}/>
+            <AddProductFrom fetchData={props.fetchData} message={props.message} messageEditor={props.messageEditor} />
         </div>
     )
 }
